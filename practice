@@ -1,0 +1,11 @@
+--------计算每个客户的平均购物篮价值和订单数量，并按购物篮价值进行排序
+SELECT 
+  customer_id, 
+  AVG(order_total) AS avg_basket_value, 
+  COUNT(DISTINCT order_id) AS order_count
+FROM 
+  orders
+GROUP BY 
+  customer_id
+ORDER BY 
+  avg_basket_value DESC;
