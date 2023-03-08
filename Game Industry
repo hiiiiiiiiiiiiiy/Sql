@@ -1,0 +1,67 @@
+-- 查询每个游戏的销售额和用户数量
+SELECT 
+    game_name, 
+    SUM(sales) AS total_sales, 
+    COUNT(DISTINCT user_id) AS total_users
+FROM 
+    sales_table
+GROUP BY 
+    game_name
+ORDER BY 
+    total_sales DESC;
+
+-- 查询每个游戏的收入和收入占比
+SELECT 
+    game_name, 
+    revenue, 
+    revenue / SUM(revenue) OVER () AS revenue_pct
+FROM 
+    (
+        SELECT 
+            game_name, 
+            SUM(sales * price) AS revenue
+        FROM 
+            sales_table
+        GROUP BY 
+            game_name
+    ) revenue_table
+ORDER BY 
+    revenue DESC;
+
+-- 查询每个用户的购买数量、总支出和平均支出
+SELECT 
+    user_id, 
+    COUNT(*) AS purchase_count, 
+    SUM(sales * price) AS total_spending, 
+    AVG(sales * price) AS average_spending
+FROM 
+    sales_table
+GROUP BY 
+    user_id
+ORDER BY 
+    total_spending DESC;
+
+-- 查询每个月的销售额和用户数量
+SELECT 
+    DATE_TRUNC('month', purchase_date) AS month, 
+    SUM(sales) AS total_sales, 
+    COUNT(DISTINCT user_id) AS total_users
+FROM 
+    sales_table
+GROUP BY 
+    month
+ORDER BY 
+    month ASC;
+
+-- 查询每个月每个游戏的销售额和用户数量
+SELECT 
+    DATE_TRUNC('month', purchase_date) AS month, 
+    game_name, 
+    SUM(sales) AS total_sales, 
+    COUNT(DISTINCT user_id) AS total_users
+FROM 
+    sales_table
+GROUP BY 
+    month, game_name
+ORDER BY 
+    month ASC, total_sales DESC;
